@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { CopyIcon, CheckIcon, TrashIcon, HistoryIcon, SparklesIcon } from './Icons';
+import { CopyIcon, CheckIcon, TrashIcon, HistoryIcon, SparklesIcon, AlertTriangleIcon } from './Icons';
 
 interface CorrectionDisplayProps {
   correctedText: string;
@@ -39,9 +39,10 @@ const CorrectionDisplay: React.FC<CorrectionDisplayProps> = ({
     }
     if (correctionError) {
       return (
-        <div className="flex flex-col items-center justify-center h-full text-red-400">
-          <p className="text-lg">Error en la corrección</p>
-          <p className="text-sm text-red-500 mt-2">{correctionError}</p>
+        <div className="flex flex-col items-center justify-center h-full text-red-400 p-4 text-center">
+            <AlertTriangleIcon className="w-12 h-12 mb-4" />
+            <p className="text-lg font-semibold">Error en la Corrección</p>
+            <p className="text-sm text-red-400/80 mt-2 max-w-md">{correctionError}</p>
         </div>
       );
     }

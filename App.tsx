@@ -40,18 +40,28 @@ const App: React.FC = () => {
     setCorrectedText('');
 
     try {
-      const prompt = `Eres un experto en gramática y estilo en español. Corrige el siguiente texto, mejorando la puntuación, la gramática y el estilo para que sea claro y profesional. No agregues introducciones ni conclusiones, solo devuelve el texto corregido.\n\nTexto original:\n"${text}"\n\nTexto corregido:`;
-      
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: prompt,
+        contents: text,
+        config: {
+            systemInstruction: "Eres un experto en gramática y estilo en español. Tu tarea es corregir el texto que te proporciona el usuario. Mejora la puntuación, la gramática y el estilo para que sea claro y profesional. No agregues introducciones, conclusiones ni ninguna explicación sobre los cambios; devuelve únicamente el texto corregido.",
+            temperature: 0.5,
+        }
       });
 
       setCorrectedText(response.text.trim());
 
     } catch (err) {
       console.error("Error calling Gemini API:", err);
-      setCorrectionError("No se pudo conectar con el servicio de corrección.");
+      let detailedError = "No se pudo conectar con el servicio de corrección.";
+      if (err instanceof Error) {
+          if (err.message.includes('API key not valid')) {
+            detailedError = "La clave de API no es válida. Por favor, verifica la configuración.";
+          } else {
+            detailedError = `Se produjo un error: ${err.message}`;
+          }
+      }
+      setCorrectionError(detailedError);
     } finally {
       setIsCorrecting(false);
     }
